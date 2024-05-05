@@ -3,12 +3,15 @@
 import { Container, Box, Typography, Paper, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion"
+
 import Dice from "../../Component/Dice/Dice";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CasinoIcon from "@mui/icons-material/Casino";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Snackbar from "@mui/material/Snackbar";
 import userImage from "./../../assets/userimage.jpg";
+import buttonClick from "./../../assets/buttonClick.wav";
 import IconButton from "@mui/material/IconButton";
 import { getTransform } from "./rollDiceCall";
 import { getProfile, getDiceValue, checkResult } from "../../Network/axios.js";
@@ -56,7 +59,7 @@ const styles = {
     margin: "auto",
     borderRadius: "50%",
     color: "white",
-    boxShadow: 10,
+    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
   },
   subContainer: {
     margin: 0,
@@ -155,6 +158,8 @@ const Game = () => {
   const predictionHandler = (btn,predictionNo) => {
     setPredictionNumber(predictionNo)
 
+    new Audio(buttonClick).play();
+
     // Remove All other Select
     document.querySelectorAll("#predictionButton").forEach((val) => {
       val.style.backgroundColor = "#008000"
@@ -165,6 +170,8 @@ const Game = () => {
 
   const betHandler = (btn,betNo) => {
     setPredictionNumber(betNo)
+    new Audio(buttonClick).play();
+
 
     // Remove All other Select
     document.querySelectorAll("#betButton").forEach((val) => {
@@ -183,7 +190,9 @@ const Game = () => {
         height: "100vh",
       }}
     >
-      <Box
+    <motion.div animate={{scale: 1.02}}
+    transition={{ ease: "easeIn", duration: 0.2 }}>
+            <Box
         height="91vh"
         width="60vh"
         bgcolor="#05933b"
@@ -228,42 +237,6 @@ const Game = () => {
             <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 500)}>Bet 500</Box>
               
             </Container>
-          {/* <CssBaseline /> */}
-          {/* <Grid
-            container
-            component="main"
-            spacing={0}
-            sx={{ cursor: "pointer" }}
-          >
-            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(5), predictionHandler(e)}}>
-              <Item color="#006600">2-6</Item>
-            </Grid>
-            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(7), predictionHandler(e)}}>
-              <Item color="#006600">7</Item>
-            </Grid>
-            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(11), predictionHandler(e)}}>
-              <Item color="#006600">8-12</Item>
-            </Grid>
-          </Grid> */}
-          {/* Set Bet */}
-          {/* <hr />
-          <hr />
-          <Grid
-            container
-            component="main"
-            spacing={0}
-            sx={{ cursor: "pointer" }}
-          >
-            <Grid item xs={4} onClick={() => setBet(100)}>
-              <Item color="#42a143">Bet 100</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setBet(200)}>
-              <Item color="#42a143">Bet 200</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setBet(500)}>
-              <Item color="#42a143">Bet 500</Item>
-            </Grid>
-          </Grid> */}
           
         </Container>
 
@@ -278,31 +251,34 @@ const Game = () => {
               }}
             />
           </IconButton>
+          <motion.div whileTap={{ scale: 1.1 }}>
           <IconButton onClick={rollDice}>
             <CasinoIcon
               style={styles.bottomButtons}
-              // onClick={rollDice}
               color="white"
               sx={{ cursor: "pointer" }}
             />
           </IconButton>
+          </motion.div>
           <IconButton  onClick={logout}>
             <LogoutIcon
               style={styles.bottomButtons}
               sx={{ color: "red", cursor: "pointer" }}
-              // onClick={logout}
             />
           </IconButton>
         </Container>
       </Box>
+      </motion.div>
+
       {resultMessage && resultMessage.length > 0 && (
         <Snackbar
-          open={open}
+        open={open}
           autoHideDuration={5000}
           onClose={handleClose}
           message={resultMessage}
         />
       )}
+
     </Container>
   );
 };

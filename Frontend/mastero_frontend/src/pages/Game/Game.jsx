@@ -17,7 +17,7 @@ import DiceSound from "./../../assets/dice.mp3";
 const styles = {
   container: {
     padding: "0",
-    height: '52%',
+    height: "52%",
   },
   item: {
     display: "flex",
@@ -61,21 +61,21 @@ const styles = {
   subContainer: {
     margin: 0,
     padding: 0,
-    height: '50%',
-    display: 'flex',
+    height: "50%",
+    display: "flex",
   },
   containerButton: {
-    flexBasis: '100%',
-    height: '100%',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    backgroundColor: '#2e952c',
-    cursor: 'pointer',
-    padding: '55px',
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'consolas',
-    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
-  }
+    flexBasis: "100%",
+    height: "100%",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    backgroundColor: "#2e952c",
+    cursor: "pointer",
+    padding: "55px",
+    color: "white",
+    textAlign: "center",
+    fontFamily: "consolas",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+  },
 };
 const Item = ({ children, color, textColor = "white" }) => (
   <Paper style={{ ...styles.item, backgroundColor: color, color: textColor }}>
@@ -95,11 +95,12 @@ const Game = () => {
   const token = localStorage.getItem("token");
 
   const rollDice = async () => {
-    console.log("DSfsdfdfsdfsdfsd",predictNumber,bet)
+    console.log("predictNumber", predictNumber);
+    console.log("bet", bet);
     try {
       if (predictNumber != 0 && bet != 0) {
         let diceRe = await getDiceValue(token);
-        console.log("🚀 ~ rollDice ~ diceRe:", diceRe)
+        console.log("🚀 ~ rollDice ~ diceRe:", diceRe);
         if (diceRe) {
           let transform1 = getTransform(diceRe.dice1);
           let transform2 = getTransform(diceRe.dice2);
@@ -152,28 +153,6 @@ const Game = () => {
     setOpen(false);
   };
 
-  const predictionHandler = (btn,predictionNo) => {
-    setPredictionNumber(predictionNo)
-
-    // Remove All other Select
-    document.querySelectorAll("#predictionButton").forEach((val) => {
-      val.style.backgroundColor = "#008000"
-    })
-
-    btn.target.style.backgroundColor = "#006600"
-  }
-
-  const betHandler = (btn,betNo) => {
-    setPredictionNumber(betNo)
-
-    // Remove All other Select
-    document.querySelectorAll("#betButton").forEach((val) => {
-      val.style.backgroundColor = "#008000"
-    })
-
-    btn.target.style.backgroundColor = "#006600"
-  }
-
   return (
     <Container
       sx={{
@@ -217,54 +196,76 @@ const Game = () => {
 
         <Container maxWidth="100%" style={styles.container}>
           <Container maxWidth="100%" style={styles.subContainer}>
-            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,5)}>2-6</Box>
-            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,7)}>7</Box>
-            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,11)}>8-12</Box>
+            <Box
+              style={
+                predictNumber === 5
+                  ? { ...styles.containerButton, backgroundColor: "darkblue" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => setPredictionNumber(5)}
+            >
+              2-6
+            </Box>
+            <Box
+              style={
+                predictNumber === 7
+                  ? { ...styles.containerButton, backgroundColor: "darkblue" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => setPredictionNumber(7)}
+            >
+              7
+            </Box>
+            <Box
+              style={
+                predictNumber === 11
+                  ? { ...styles.containerButton, backgroundColor: "darkblue" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => setPredictionNumber(11)}
+            >
+              8-12
+            </Box>
           </Container>
 
           <Container maxWidth="100%" style={styles.subContainer}>
-            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 100)}>Bet 100</Box>
-            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 200)}>Bet 200</Box>
-            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 500)}>Bet 500</Box>
-              
-            </Container>
-          {/* <CssBaseline /> */}
-          {/* <Grid
-            container
-            component="main"
-            spacing={0}
-            sx={{ cursor: "pointer" }}
-          >
-            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(5), predictionHandler(e)}}>
-              <Item color="#006600">2-6</Item>
-            </Grid>
-            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(7), predictionHandler(e)}}>
-              <Item color="#006600">7</Item>
-            </Grid>
-            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(11), predictionHandler(e)}}>
-              <Item color="#006600">8-12</Item>
-            </Grid>
-          </Grid> */}
-          {/* Set Bet */}
-          {/* <hr />
-          <hr />
-          <Grid
-            container
-            component="main"
-            spacing={0}
-            sx={{ cursor: "pointer" }}
-          >
-            <Grid item xs={4} onClick={() => setBet(100)}>
-              <Item color="#42a143">Bet 100</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setBet(200)}>
-              <Item color="#42a143">Bet 200</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setBet(500)}>
-              <Item color="#42a143">Bet 500</Item>
-            </Grid>
-          </Grid> */}
-          
+            <Box
+              style={
+                bet === 100
+                  ? { ...styles.containerButton, backgroundColor: "darkgreen" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => setBet(100)}
+            >
+              Bet 100
+            </Box>
+            <Box
+              style={
+                bet === 200
+                  ? { ...styles.containerButton, backgroundColor: "darkgreen" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => setBet(200)}
+            >
+              Bet 200
+            </Box>
+            <Box
+              style={
+                bet === 500
+                  ? { ...styles.containerButton, backgroundColor: "darkgreen" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => setBet(500)}
+            >
+              Bet 500
+            </Box>
+          </Container>
         </Container>
 
         <Container maxWidth="100%" sx={styles.bottom}>
@@ -286,7 +287,7 @@ const Game = () => {
               sx={{ cursor: "pointer" }}
             />
           </IconButton>
-          <IconButton  onClick={logout}>
+          <IconButton onClick={logout}>
             <LogoutIcon
               style={styles.bottomButtons}
               sx={{ color: "red", cursor: "pointer" }}

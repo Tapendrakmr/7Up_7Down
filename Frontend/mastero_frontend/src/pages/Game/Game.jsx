@@ -12,13 +12,12 @@ import userImage from "./../../assets/userimage.jpg";
 import IconButton from "@mui/material/IconButton";
 import { getTransform } from "./rollDiceCall";
 import { getProfile, getDiceValue, checkResult } from "../../Network/axios.js";
-import TouchRipple from "@mui/material/ButtonBase/TouchRipple";
 import DiceSound from "./../../assets/dice.mp3";
 
 const styles = {
   container: {
-    marginLeft: "-8px", // Negative margin to offset the default grid spacing
-    marginRight: "-8px",
+    padding: "0",
+    height: '52%',
   },
   item: {
     display: "flex",
@@ -49,16 +48,34 @@ const styles = {
     alignItems: "center",
   },
   bottomButtons: {
-    height: "65px",
+    height: "62px",
     backgroundColor: "#D22B2B",
     fontSize: "30px",
-    padding: "10px",
-    width: "65px",
+    padding: "15px",
+    width: "62px",
     margin: "auto",
     borderRadius: "50%",
     color: "white",
     boxShadow: 10,
   },
+  subContainer: {
+    margin: 0,
+    padding: 0,
+    height: '50%',
+    display: 'flex',
+  },
+  containerButton: {
+    flexBasis: '100%',
+    height: '100%',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#2e952c',
+    cursor: 'pointer',
+    padding: '55px',
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: 'consolas',
+    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+  }
 };
 const Item = ({ children, color, textColor = "white" }) => (
   <Paper style={{ ...styles.item, backgroundColor: color, color: textColor }}>
@@ -78,9 +95,11 @@ const Game = () => {
   const token = localStorage.getItem("token");
 
   const rollDice = async () => {
+    console.log("DSfsdfdfsdfsdfsd",predictNumber,bet)
     try {
       if (predictNumber != 0 && bet != 0) {
         let diceRe = await getDiceValue(token);
+        console.log("🚀 ~ rollDice ~ diceRe:", diceRe)
         if (diceRe) {
           let transform1 = getTransform(diceRe.dice1);
           let transform2 = getTransform(diceRe.dice2);
@@ -132,6 +151,29 @@ const Game = () => {
 
     setOpen(false);
   };
+
+  const predictionHandler = (btn,predictionNo) => {
+    setPredictionNumber(predictionNo)
+
+    // Remove All other Select
+    document.querySelectorAll("#predictionButton").forEach((val) => {
+      val.style.backgroundColor = "#008000"
+    })
+
+    btn.target.style.backgroundColor = "#006600"
+  }
+
+  const betHandler = (btn,betNo) => {
+    setPredictionNumber(betNo)
+
+    // Remove All other Select
+    document.querySelectorAll("#betButton").forEach((val) => {
+      val.style.backgroundColor = "#008000"
+    })
+
+    btn.target.style.backgroundColor = "#006600"
+  }
+
   return (
     <Container
       sx={{
@@ -144,7 +186,7 @@ const Game = () => {
       <Box
         height="91vh"
         width="60vh"
-        bgcolor="#158a61"
+        bgcolor="#05933b"
         margin="auto"
         borderRadius="10px"
         sx={{
@@ -154,7 +196,7 @@ const Game = () => {
           justifyContent: "space-between",
         }}
       >
-        <Box height="48%" width="100%" bgcolor="#05472A" borderRadius="10px">
+        <Box height="48%" width="100%" bgcolor="#03511f" borderRadius="10px">
           <Typography style={styles.score} variant="h6">
             <AttachMoneyIcon /> {userDetails?.gameBalance}
           </Typography>
@@ -174,25 +216,37 @@ const Game = () => {
         </Box>
 
         <Container maxWidth="100%" style={styles.container}>
+          <Container maxWidth="100%" style={styles.subContainer}>
+            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,5)}>2-6</Box>
+            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,7)}>7</Box>
+            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,11)}>8-12</Box>
+          </Container>
+
+          <Container maxWidth="100%" style={styles.subContainer}>
+            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 100)}>Bet 100</Box>
+            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 200)}>Bet 200</Box>
+            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 500)}>Bet 500</Box>
+              
+            </Container>
           {/* <CssBaseline /> */}
-          <Grid
+          {/* <Grid
             container
             component="main"
             spacing={0}
             sx={{ cursor: "pointer" }}
           >
-            <Grid item xs={4} onClick={() => setPredictionNumber(5)}>
+            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(5), predictionHandler(e)}}>
               <Item color="#006600">2-6</Item>
             </Grid>
-            <Grid item xs={4} onClick={() => setPredictionNumber(7)}>
+            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(7), predictionHandler(e)}}>
               <Item color="#006600">7</Item>
             </Grid>
-            <Grid item xs={4} onClick={() => setPredictionNumber(11)}>
+            <Grid id="predictionbtn" item xs={4} onClick={(e) => {setPredictionNumber(11), predictionHandler(e)}}>
               <Item color="#006600">8-12</Item>
             </Grid>
-          </Grid>
+          </Grid> */}
           {/* Set Bet */}
-          <hr />
+          {/* <hr />
           <hr />
           <Grid
             container
@@ -209,7 +263,8 @@ const Game = () => {
             <Grid item xs={4} onClick={() => setBet(500)}>
               <Item color="#42a143">Bet 500</Item>
             </Grid>
-          </Grid>
+          </Grid> */}
+          
         </Container>
 
         <Container maxWidth="100%" sx={styles.bottom}>
@@ -220,24 +275,22 @@ const Game = () => {
               width={60}
               style={{
                 borderRadius: "50%",
-                // margin: "auto",
-                // marginRight: "50px",
               }}
             />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={rollDice}>
             <CasinoIcon
               style={styles.bottomButtons}
-              onClick={rollDice}
+              // onClick={rollDice}
               color="white"
               sx={{ cursor: "pointer" }}
             />
           </IconButton>
-          <IconButton>
+          <IconButton  onClick={logout}>
             <LogoutIcon
               style={styles.bottomButtons}
               sx={{ color: "red", cursor: "pointer" }}
-              onClick={logout}
+              // onClick={logout}
             />
           </IconButton>
         </Container>

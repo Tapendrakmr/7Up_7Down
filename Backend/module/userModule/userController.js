@@ -1,14 +1,14 @@
 import { getToken } from "../../utils/auth.js";
-import userDB from "../../models/users.js";
 import { addUser, readUser } from "../../db/db.js";
 import { v4 as uuidv4 } from "uuid";
 
 const signup = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const userDB = readUser();
     const emailExists = userDB.find((user) => user.email === email);
     if (emailExists) {
-      throw Error("User already exists");
+      throw Error("The user account already exists.");
     }
 
     const newUser = {
@@ -26,7 +26,7 @@ const signup = async (req, res, next) => {
     addUser(data);
     res.json({
       status: "success",
-      message: "user created successfully",
+      message: "The user has been successfully created.",
       data: { token },
     });
   } catch (err) {
@@ -44,15 +44,15 @@ const signIn = async (req, res, next) => {
     const userDB = readUser();
     const emailExists = userDB.find((user) => user.email === email);
     if (!emailExists) {
-      throw Error("user not found");
+      throw Error("The user could not be found.");
     }
     if (emailExists.password != password) {
-      throw Error("password not match");
+      throw Error("The password entered does not match");
     }
     const token = getToken({ id: emailExists.id, email: email });
     res.json({
       status: "success",
-      message: "user login successfully",
+      message: "User logged in successfully.",
       data: { token },
       //   token: `Bearer ${token}`,
     });
@@ -72,13 +72,13 @@ const profile = async (req, res, next) => {
     const userDB = readUser();
     const userDetails = userDB.find((user) => user.id === userId);
     if (!userDetails) {
-      throw Error("user not found");
+      throw Error("The user could not be found.");
     }
     delete userDetails["password"];
     userDetails["createdAt"] = new Date(userDetails["createdAt"]);
     res.json({
       status: "success",
-      message: "User detail fetched successfully",
+      message: "The user details were fetched successfully.",
       data: { userDetails },
       //   token: `Bearer ${token}`,
     });

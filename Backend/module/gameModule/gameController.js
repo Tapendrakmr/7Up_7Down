@@ -8,7 +8,7 @@ const getDiceValue = async (req, res, next) => {
     const userDetailsIndex = userDB.findIndex((user) => user.id === userId);
     const userDetails = userDB[userDetailsIndex];
     if (userDetails && userDetails.gameBalance < 100) {
-      throw Error("Your balance is very less than 100");
+      throw Error("Your balance is less than 100, which is insufficient.");
     }
     const random1 = Math.floor(Math.random() * 6) + 1;
     const random2 = Math.floor(Math.random() * 6) + 1;
@@ -25,7 +25,7 @@ const getDiceValue = async (req, res, next) => {
 
     res.json({
       status: "success",
-      message: "Dice value fetched successfully",
+      message: "The dice value has been successfully fetched.",
       data: {
         gameId: newGame.gameId,
         dice1: random1,
@@ -53,7 +53,7 @@ const getGameResult = async (req, res, next) => {
     const gameDetailIndex = gameDb.findIndex((game) => game.gameId === gameId);
     const gameDetails = gameDb[gameDetailIndex];
     if (!gameDetails) {
-      throw Error("game detail not found in database");
+      throw Error("The game details were not found in the database");
     }
     // Fetch user details from user table
     const userDB = readUser();
@@ -62,9 +62,9 @@ const getGameResult = async (req, res, next) => {
     );
     const userDetails = userDB[userDetailsIndex];
     if (!userDetails) {
-      throw Error("user detail not found in database");
+      throw Error("The user details were not found in the database.");
     }
-    let responseMessage = "You won";
+    let responseMessage = "Congratulations, you've won!";
 
     // Check user game status
     if (gameDetails.diceActualValue == Number(userDicePredictValue)) {
@@ -75,7 +75,7 @@ const getGameResult = async (req, res, next) => {
       }
     } else {
       userDetails["gameBalance"] -= betAmount;
-      responseMessage = "You loose,try again";
+      responseMessage = "Sorry, you lost. Better luck next time!";
     }
     // update user details
     userDB[userDetailsIndex] = userDetails;

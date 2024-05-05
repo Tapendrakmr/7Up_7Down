@@ -77,11 +77,6 @@ const styles = {
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
   },
 };
-const Item = ({ children, color, textColor = "white" }) => (
-  <Paper style={{ ...styles.item, backgroundColor: color, color: textColor }}>
-    {children}
-  </Paper>
-);
 
 const Game = () => {
   const navigate = useNavigate();
@@ -100,7 +95,6 @@ const Game = () => {
     try {
       if (predictNumber != 0 && bet != 0) {
         let diceRe = await getDiceValue(token);
-        console.log("🚀 ~ rollDice ~ diceRe:", diceRe);
         if (diceRe) {
           let transform1 = getTransform(diceRe.dice1);
           let transform2 = getTransform(diceRe.dice2);
@@ -110,7 +104,9 @@ const Game = () => {
           let res = await checkResult(token, diceRe.gameId, predictNumber, bet);
           setResultMessage(res);
           if (res != undefined) {
-            handleClick();
+            setTimeout( () => {
+              handleClick();
+            },500)
           }
           setTimeout(async () => {
             await setProfile();
@@ -149,7 +145,6 @@ const Game = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
 
@@ -199,7 +194,7 @@ const Game = () => {
             <Box
               style={
                 predictNumber === 5
-                  ? { ...styles.containerButton, backgroundColor: "darkblue" }
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
                   : styles.containerButton
               }
               id="predictionButton"
@@ -210,7 +205,7 @@ const Game = () => {
             <Box
               style={
                 predictNumber === 7
-                  ? { ...styles.containerButton, backgroundColor: "darkblue" }
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
                   : styles.containerButton
               }
               id="predictionButton"
@@ -221,7 +216,7 @@ const Game = () => {
             <Box
               style={
                 predictNumber === 11
-                  ? { ...styles.containerButton, backgroundColor: "darkblue" }
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
                   : styles.containerButton
               }
               id="predictionButton"
@@ -235,7 +230,7 @@ const Game = () => {
             <Box
               style={
                 bet === 100
-                  ? { ...styles.containerButton, backgroundColor: "darkgreen" }
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
                   : { ...styles.containerButton, backgroundColor: "#01865b" }
               }
               id="betButton"
@@ -246,7 +241,7 @@ const Game = () => {
             <Box
               style={
                 bet === 200
-                  ? { ...styles.containerButton, backgroundColor: "darkgreen" }
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
                   : { ...styles.containerButton, backgroundColor: "#01865b" }
               }
               id="betButton"
@@ -257,7 +252,7 @@ const Game = () => {
             <Box
               style={
                 bet === 500
-                  ? { ...styles.containerButton, backgroundColor: "darkgreen" }
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
                   : { ...styles.containerButton, backgroundColor: "#01865b" }
               }
               id="betButton"
@@ -282,7 +277,6 @@ const Game = () => {
           <IconButton onClick={rollDice}>
             <CasinoIcon
               style={styles.bottomButtons}
-              // onClick={rollDice}
               color="white"
               sx={{ cursor: "pointer" }}
             />
@@ -291,7 +285,6 @@ const Game = () => {
             <LogoutIcon
               style={styles.bottomButtons}
               sx={{ color: "red", cursor: "pointer" }}
-              // onClick={logout}
             />
           </IconButton>
         </Container>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { Container, Box, Typography, Paper, Grid } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Dice from "../../Component/Dice/Dice";
@@ -9,16 +9,17 @@ import CasinoIcon from "@mui/icons-material/Casino";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Snackbar from "@mui/material/Snackbar";
 import userImage from "./../../assets/userimage.jpg";
+import buttonClick from "./../../assets/buttonClick.wav";
 import IconButton from "@mui/material/IconButton";
 import { getTransform } from "./rollDiceCall";
 import { getProfile, getDiceValue, checkResult } from "../../Network/axios.js";
-import TouchRipple from "@mui/material/ButtonBase/TouchRipple";
 import DiceSound from "./../../assets/dice.mp3";
+import {motion} from 'framer-motion'
 
 const styles = {
   container: {
-    marginLeft: "-8px", // Negative margin to offset the default grid spacing
-    marginRight: "-8px",
+    padding: "0",
+    height: "52%",
   },
   item: {
     display: "flex",
@@ -49,22 +50,36 @@ const styles = {
     alignItems: "center",
   },
   bottomButtons: {
-    height: "65px",
+    height: "62px",
     backgroundColor: "#D22B2B",
     fontSize: "30px",
-    padding: "10px",
-    width: "65px",
+    padding: "15px",
+    width: "62px",
     margin: "auto",
     borderRadius: "50%",
     color: "white",
-    boxShadow: 10,
+    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+  },
+  subContainer: {
+    margin: 0,
+    padding: 0,
+    height: "50%",
+    display: "flex",
+  },
+  containerButton: {
+    flexBasis: "100%",
+    height: "100%",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    backgroundColor: "#2e952c",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    textAlign: "center",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
   },
 };
-const Item = ({ children, color, textColor = "white" }) => (
-  <Paper style={{ ...styles.item, backgroundColor: color, color: textColor }}>
-    {children}
-  </Paper>
-);
 
 const Game = () => {
   const navigate = useNavigate();
@@ -90,11 +105,15 @@ const Game = () => {
           let res = await checkResult(token, diceRe.gameId, predictNumber, bet);
           setResultMessage(res);
           if (res != undefined) {
-            handleClick();
+            setTimeout(() => {
+              handleClick();
+            }, 500);
           }
           setTimeout(async () => {
             await setProfile();
           }, 500);
+        }else if(diceRe==undefined){
+          setResultMessage('Insufficient Balance');
         }
         setPredictionNumber(0);
         setBet(0);
@@ -129,9 +148,9 @@ const Game = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
+
   return (
     <Container
       sx={{
@@ -144,9 +163,10 @@ const Game = () => {
       <Box
         height="91vh"
         width="60vh"
-        bgcolor="#158a61"
+        bgcolor="#05933b"
         margin="auto"
-        borderRadius="10px"
+        borderRadius="30px"
+        overflow="hidden"
         sx={{
           boxShadow: 5,
           display: "flex",
@@ -154,7 +174,7 @@ const Game = () => {
           justifyContent: "space-between",
         }}
       >
-        <Box height="48%" width="100%" bgcolor="#05472A" borderRadius="10px">
+        <Box height="48%" width="100%" bgcolor="#03511f" borderRadius="10px">
           <Typography style={styles.score} variant="h6">
             <AttachMoneyIcon /> {userDetails?.gameBalance}
           </Typography>
@@ -174,74 +194,135 @@ const Game = () => {
         </Box>
 
         <Container maxWidth="100%" style={styles.container}>
-          {/* <CssBaseline /> */}
-          <Grid
-            container
-            component="main"
-            spacing={0}
-            sx={{ cursor: "pointer" }}
-          >
-            <Grid item xs={4} onClick={() => setPredictionNumber(5)}>
-              <Item color="#006600">2-6</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setPredictionNumber(7)}>
-              <Item color="#006600">7</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setPredictionNumber(11)}>
-              <Item color="#006600">8-12</Item>
-            </Grid>
-          </Grid>
-          {/* Set Bet */}
-          <hr />
-          <hr />
-          <Grid
-            container
-            component="main"
-            spacing={0}
-            sx={{ cursor: "pointer" }}
-          >
-            <Grid item xs={4} onClick={() => setBet(100)}>
-              <Item color="#42a143">Bet 100</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setBet(200)}>
-              <Item color="#42a143">Bet 200</Item>
-            </Grid>
-            <Grid item xs={4} onClick={() => setBet(500)}>
-              <Item color="#42a143">Bet 500</Item>
-            </Grid>
-          </Grid>
+          <Container maxWidth="100%" style={styles.subContainer}>
+            <Box
+              style={
+                predictNumber === 5
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => {
+                setPredictionNumber(5);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">2-6</Typography>
+            </Box>
+            <Box
+              style={
+                predictNumber === 7
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => {
+                setPredictionNumber(7);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">7</Typography>
+            </Box>
+            <Box
+              style={
+                predictNumber === 11
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => {
+                setPredictionNumber(11);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">8-12</Typography>
+            </Box>
+          </Container>
+
+          <Container maxWidth="100%" style={styles.subContainer}>
+            <Box
+              style={
+                bet === 100
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => {
+                setBet(100);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography>Bet 100</Typography>
+            </Box>
+            <Box
+              style={
+                bet === 200
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => {
+                setBet(200);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography>Bet 200</Typography>
+              
+            </Box>
+            <Box
+              style={
+                bet === 500
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => {
+                setBet(500);
+                new Audio(buttonClick).play();
+              }}
+            >
+        <Typography> Bet 500</Typography>
+            </Box>
+          </Container>
         </Container>
 
         <Container maxWidth="100%" sx={styles.bottom}>
-          <IconButton>
+
+        <motion.div whileTap={{ scale: 1.2 }}>
+          <IconButton sx={{ boxShadow: 2 }}>
             <img
               src={userImage}
               height={60}
               width={60}
               style={{
                 borderRadius: "50%",
-                // margin: "auto",
-                // marginRight: "50px",
               }}
             />
           </IconButton>
-          <IconButton>
-            <CasinoIcon
-              style={styles.bottomButtons}
-              onClick={rollDice}
-              color="white"
-              sx={{ cursor: "pointer" }}
-            />
-          </IconButton>
-          <IconButton>
-            <LogoutIcon
-              style={styles.bottomButtons}
-              sx={{ color: "red", cursor: "pointer" }}
-              onClick={logout}
-            />
-          </IconButton>
+          </motion.div>
+
+          <motion.div whileTap={{ scale: 1.2 }}>
+            <IconButton sx={{ boxShadow: 2 }} onClick={rollDice}>
+              <CasinoIcon
+                style={styles.bottomButtons}
+                color="white"
+                sx={{ cursor: "pointer" }}
+              />
+            </IconButton>
+          </motion.div>
+
+          <motion.div whileTap={{ scale: 1.2 }}>
+            <IconButton sx={{ boxShadow: 2 }} onClick={logout}>
+              <LogoutIcon
+                style={styles.bottomButtons}
+                sx={{ color: "red", cursor: "pointer" }}
+              />
+            </IconButton>
+
+          </motion.div>
         </Container>
       </Box>
+
       {resultMessage && resultMessage.length > 0 && (
         <Snackbar
           open={open}

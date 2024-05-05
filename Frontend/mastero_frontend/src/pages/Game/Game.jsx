@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
 
-import { Container, Box, Typography, Paper, Grid } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion"
-
 import Dice from "../../Component/Dice/Dice";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CasinoIcon from "@mui/icons-material/Casino";
@@ -16,11 +14,12 @@ import IconButton from "@mui/material/IconButton";
 import { getTransform } from "./rollDiceCall";
 import { getProfile, getDiceValue, checkResult } from "../../Network/axios.js";
 import DiceSound from "./../../assets/dice.mp3";
+import {motion} from 'framer-motion'
 
 const styles = {
   container: {
     padding: "0",
-    height: '52%',
+    height: "52%",
   },
   item: {
     display: "flex",
@@ -59,32 +58,28 @@ const styles = {
     margin: "auto",
     borderRadius: "50%",
     color: "white",
-    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
+    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
   },
   subContainer: {
     margin: 0,
     padding: 0,
-    height: '50%',
-    display: 'flex',
+    height: "50%",
+    display: "flex",
   },
   containerButton: {
-    flexBasis: '100%',
-    height: '100%',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    backgroundColor: '#2e952c',
-    cursor: 'pointer',
-    padding: '55px',
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'consolas',
-    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
-  }
+    flexBasis: "100%",
+    height: "100%",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    backgroundColor: "#2e952c",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    textAlign: "center",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+  },
 };
-const Item = ({ children, color, textColor = "white" }) => (
-  <Paper style={{ ...styles.item, backgroundColor: color, color: textColor }}>
-    {children}
-  </Paper>
-);
 
 const Game = () => {
   const navigate = useNavigate();
@@ -98,11 +93,9 @@ const Game = () => {
   const token = localStorage.getItem("token");
 
   const rollDice = async () => {
-    console.log("DSfsdfdfsdfsdfsd",predictNumber,bet)
     try {
       if (predictNumber != 0 && bet != 0) {
         let diceRe = await getDiceValue(token);
-        console.log("🚀 ~ rollDice ~ diceRe:", diceRe)
         if (diceRe) {
           let transform1 = getTransform(diceRe.dice1);
           let transform2 = getTransform(diceRe.dice2);
@@ -112,11 +105,15 @@ const Game = () => {
           let res = await checkResult(token, diceRe.gameId, predictNumber, bet);
           setResultMessage(res);
           if (res != undefined) {
-            handleClick();
+            setTimeout(() => {
+              handleClick();
+            }, 500);
           }
           setTimeout(async () => {
             await setProfile();
           }, 500);
+        }else if(diceRe==undefined){
+          setResultMessage('Insufficient Balance');
         }
         setPredictionNumber(0);
         setBet(0);
@@ -151,35 +148,8 @@ const Game = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
-
-  const predictionHandler = (btn,predictionNo) => {
-    setPredictionNumber(predictionNo)
-
-    new Audio(buttonClick).play();
-
-    // Remove All other Select
-    document.querySelectorAll("#predictionButton").forEach((val) => {
-      val.style.backgroundColor = "#008000"
-    })
-
-    btn.target.style.backgroundColor = "#006600"
-  }
-
-  const betHandler = (btn,betNo) => {
-    setPredictionNumber(betNo)
-    new Audio(buttonClick).play();
-
-
-    // Remove All other Select
-    document.querySelectorAll("#betButton").forEach((val) => {
-      val.style.backgroundColor = "#008000"
-    })
-
-    btn.target.style.backgroundColor = "#006600"
-  }
 
   return (
     <Container
@@ -190,14 +160,13 @@ const Game = () => {
         height: "100vh",
       }}
     >
-    <motion.div animate={{scale: 1.02}}
-    transition={{ ease: "easeIn", duration: 0.2 }}>
-            <Box
+      <Box
         height="91vh"
         width="60vh"
         bgcolor="#05933b"
         margin="auto"
-        borderRadius="10px"
+        borderRadius="30px"
+        overflow="hidden"
         sx={{
           boxShadow: 5,
           display: "flex",
@@ -226,22 +195,101 @@ const Game = () => {
 
         <Container maxWidth="100%" style={styles.container}>
           <Container maxWidth="100%" style={styles.subContainer}>
-            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,5)}>2-6</Box>
-            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,7)}>7</Box>
-            <Box style={{...styles.containerButton,backgroundColor:"#01865b"}} id="predictionButton" onClick={(data) => predictionHandler(data,11)}>8-12</Box>
+            <Box
+              style={
+                predictNumber === 5
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => {
+                setPredictionNumber(5);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">2-6</Typography>
+            </Box>
+            <Box
+              style={
+                predictNumber === 7
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => {
+                setPredictionNumber(7);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">7</Typography>
+            </Box>
+            <Box
+              style={
+                predictNumber === 11
+                  ? { ...styles.containerButton, backgroundColor: "#247f23" }
+                  : styles.containerButton
+              }
+              id="predictionButton"
+              onClick={() => {
+                setPredictionNumber(11);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">8-12</Typography>
+            </Box>
           </Container>
 
           <Container maxWidth="100%" style={styles.subContainer}>
-            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 100)}>Bet 100</Box>
-            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 200)}>Bet 200</Box>
-            <Box style={styles.containerButton} id="betButton" onClick={(data) => betHandler(data, 500)}>Bet 500</Box>
+            <Box
+              style={
+                bet === 100
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => {
+                setBet(100);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography>Bet 100</Typography>
+            </Box>
+            <Box
+              style={
+                bet === 200
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => {
+                setBet(200);
+                new Audio(buttonClick).play();
+              }}
+            >
+              <Typography>Bet 200</Typography>
               
-            </Container>
-          
+            </Box>
+            <Box
+              style={
+                bet === 500
+                  ? { ...styles.containerButton, backgroundColor: "#015440" }
+                  : { ...styles.containerButton, backgroundColor: "#01865b" }
+              }
+              id="betButton"
+              onClick={() => {
+                setBet(500);
+                new Audio(buttonClick).play();
+              }}
+            >
+        <Typography> Bet 500</Typography>
+            </Box>
+          </Container>
         </Container>
 
         <Container maxWidth="100%" sx={styles.bottom}>
-          <IconButton>
+
+        <motion.div whileTap={{ scale: 1.2 }}>
+          <IconButton sx={{ boxShadow: 2 }}>
             <img
               src={userImage}
               height={60}
@@ -251,34 +299,38 @@ const Game = () => {
               }}
             />
           </IconButton>
-          <motion.div whileTap={{ scale: 1.1 }}>
-          <IconButton onClick={rollDice}>
-            <CasinoIcon
-              style={styles.bottomButtons}
-              color="white"
-              sx={{ cursor: "pointer" }}
-            />
-          </IconButton>
           </motion.div>
-          <IconButton  onClick={logout}>
-            <LogoutIcon
-              style={styles.bottomButtons}
-              sx={{ color: "red", cursor: "pointer" }}
-            />
-          </IconButton>
+
+          <motion.div whileTap={{ scale: 1.2 }}>
+            <IconButton sx={{ boxShadow: 2 }} onClick={rollDice}>
+              <CasinoIcon
+                style={styles.bottomButtons}
+                color="white"
+                sx={{ cursor: "pointer" }}
+              />
+            </IconButton>
+          </motion.div>
+
+          <motion.div whileTap={{ scale: 1.2 }}>
+            <IconButton sx={{ boxShadow: 2 }} onClick={logout}>
+              <LogoutIcon
+                style={styles.bottomButtons}
+                sx={{ color: "red", cursor: "pointer" }}
+              />
+            </IconButton>
+
+          </motion.div>
         </Container>
       </Box>
-      </motion.div>
 
       {resultMessage && resultMessage.length > 0 && (
         <Snackbar
-        open={open}
+          open={open}
           autoHideDuration={5000}
           onClose={handleClose}
           message={resultMessage}
         />
       )}
-
     </Container>
   );
 };

@@ -7,7 +7,7 @@ const getDiceValue = async (req, res, next) => {
     const userDB = readUser();
     const userDetailsIndex = userDB.findIndex((user) => user.id === userId);
     const userDetails = userDB[userDetailsIndex];
-    if (userDetails && userDetails.gameBalance < 100) {
+    if (userDetails && userDetails.gameBalance < 500) {
       throw Error("Your balance is less than 100, which is insufficient.");
     }
     const random1 = Math.floor(Math.random() * 6) + 1;

@@ -65,18 +65,21 @@ const getGameResult = async (req, res, next) => {
       throw Error("The user details were not found in the database.");
     }
     let responseMessage = "Congratulations, you've won!";
-
-    // Check user game status
-    if (gameDetails.diceActualValue == Number(userDicePredictValue)) {
-      if (userDicePredictValue < 7 || userDicePredictValue > 7) {
-        userDetails["gameBalance"] += 2 * betAmount;
-      } else if (userDicePredictValue == 7) {
-        userDetails["gameBalance"] += 5 * betAmount;
-      }
+    if (
+      (gameDetails.diceActualValue > 7 && Number(userDicePredictValue) > 7) ||
+      (gameDetails.diceActualValue < 7 && Number(userDicePredictValue) < 7)
+    ) {
+      userDetails["gameBalance"] += 2 * betAmount;
+    } else if (
+      gameDetails.diceActualValue == 7 &&
+      Number(userDicePredictValue) == 7
+    ) {
+      userDetails["gameBalance"] += 5 * betAmount;
     } else {
       userDetails["gameBalance"] -= betAmount;
       responseMessage = "Sorry, you lost. Better luck next time!";
     }
+
     // update user details
     userDB[userDetailsIndex] = userDetails;
     addUser(userDB);
@@ -91,7 +94,10 @@ const getGameResult = async (req, res, next) => {
     res.json({
       status: "success",
       message: responseMessage,
-      data: {},
+      data: {
+        gameDetails: gameDetails.diceActualValue,
+        userDicePredictValue: userDicePredictValue,
+      },
     });
   } catch (err) {
     return res.json({

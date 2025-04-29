@@ -1,7 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "docker:enableMajor"],
+  "extends": ["config:recommended"],
   "docker": {
-    "enabled": true
+    "enabled": true,
+    "pinDigests": true,
+    "major": {
+      "enabled": true
+    },
+    "minor": {
+      "enabled": true
+    },
+    "patch": {
+      "enabled": true
+    }
   }
 }

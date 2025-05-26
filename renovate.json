@@ -1,24 +1,35 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "baseBranches": ["dummy"],
-  "docker": {
-    "enabled": true,
-    "pinDigests": false,
-    "major": {
-      "enabled": true
-    },
-    "minor": {
-      "enabled": true
-    },
-    "patch": {
-      "enabled": false
-    }
-  },
+  "extends": [
+    "config:recommended"
+  ],
+  "baseBranches": [
+    "dummy"
+  ],
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["node"],
+      "matchCategories": [
+        "docker"
+      ],
+      "enabled": true,
+      "pinDigests": false,
+      "major": {
+        "enabled": true
+      },
+      "minor": {
+        "enabled": true
+      },
+      "patch": {
+        "enabled": false
+      }
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "node"
+      ],
       "groupName": "Node.js base image updates",
       "matchCurrentVersion": ">=20.0.0",
       "allowedVersions": ">=20.0.0"

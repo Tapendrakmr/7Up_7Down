@@ -1,7 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
   "baseBranches": ["dummy"],
+  "extends": [
+    "config:base",
+    "group:allNonMajor"
+  ],
   "docker": {
     "enabled": true,
     "pinDigests": false,
@@ -15,13 +18,7 @@
       "enabled": false
     }
   },
-  "packageRules": [
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["node"],
-      "groupName": "Node.js base image updates",
-      "matchCurrentVersion": ">=20.0.0",
-      "allowedVersions": ">=20.0.0"
-    }
+  "schedule": [
+    "every weekday"
   ]
 }

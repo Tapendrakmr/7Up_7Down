@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "baseBranches": ["dummy"]
+  "baseBranches": ["dummy"],
   "docker": {
     "enabled": true,
     "pinDigests": false,

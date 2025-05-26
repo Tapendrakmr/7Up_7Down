@@ -1,5 +1,5 @@
 # Use Node.js 20.18.0 based on Debian Bullseye Slim
-FROM node:20.18.0-bullseye-slim
+FROM node:22.16.0-bullseye-slim
 
 # Set working directory
 WORKDIR /usr/src/app
